@@ -40,9 +40,21 @@ namespace PawnShop.Infrastructure.DBContext
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Loan>()
-    .HasOne(x => x.Customer)
-    .WithMany(x => x.Loans)
-    .OnDelete(DeleteBehavior.Restrict);
+                .HasOne(x => x.Customer)
+                .WithMany(x => x.Loans)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GoldItem>()
+                .HasOne(x => x.Loan)
+                .WithMany(x => x.GoldItems)
+                .HasForeignKey(x => x.LoanId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(x => x.Loan)
+                .WithMany(x => x.Payments)
+                .HasForeignKey(x => x.LoanId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
     }
