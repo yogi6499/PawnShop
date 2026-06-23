@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="PawnShop.Application/PawnShop.Application.csproj" />
+  <Project Path="PawnShop.Domain/PawnShop.Domain.csproj" />
+  <Project Path="PawnShop.Infrastructure/PawnShop.Infrastructure.csproj" />
+  <Project Path="PawnShop/PawnShop.API.csproj" />
+</Solution>

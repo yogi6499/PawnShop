@@ -1,0 +1,24 @@
+﻿using PawnShop.Domain.Common;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace PawnShop.Domain.Entities
+{
+    public class Tenant : BaseEntity
+    {
+        public required string Code { get; set; }
+
+        public required string Name { get; set; }
+
+        public required string Phone { get; set; }
+
+        public required string Address { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public string? Plan { get; set; }
+    }
+}
