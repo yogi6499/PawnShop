@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using PawnShop.Application.DTOs;
 using PawnShop.Application.Interfaces.IUseCases;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace PawnShop.API.Controllers;
 
@@ -26,17 +26,24 @@ public class AuthController : ControllerBase
             await _authService.SignupAsync(request);
             return Ok();
         }
-        catch (InvalidOperationException ex)
+        catch (InvalidOperationException ex) // expected domain error
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var result = await _authService.LoginAsync(request);
-        return result is null ? Unauthorized() : Ok(result);
+        try
+        {
+            var result = await _authService.LoginAsync(request);
+            return result is null ? Unauthorized() : Ok(result);
+        }
+        catch (Exception) // allow middleware to handle unexpected cases
+        {
+            throw;
+        }
     }
 
     [Authorize]
@@ -55,7 +62,7 @@ public class AuthController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { message = ex.Message });
         }
     }
 }

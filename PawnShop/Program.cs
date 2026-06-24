@@ -10,6 +10,7 @@ using System.Text;
 using PawnShop.Infrastructure.Repositories.QueryRepository;
 using PawnShop.Infrastructure.Repositories.CommandRepository;
 using PawnShop.Application.UseCases;
+using PawnShop.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,9 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserQueryRepository, UserQueryRepository>();
 builder.Services.AddScoped<IUserCommandRepository, UserCommandRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICustomerQueryRepository, CustomerQueryRepository>();
+builder.Services.AddScoped<ICustomerCommandRepository, CustomerCommandRepository>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 
 var app = builder.Build();
 
@@ -70,6 +74,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
