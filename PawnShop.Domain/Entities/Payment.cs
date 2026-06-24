@@ -20,7 +20,15 @@ namespace PawnShop.Domain.Entities
 
         public Loan Loan { get; set; } = null!;
 
-        public decimal Amount { get; set; }
+        public decimal PrincipalAmount { get; set; }
+
+        public decimal InterestAmount { get; set; }
+
+        public decimal PenaltyAmount { get; set; }
+
+        public decimal ServiceFee { get; set; }
+
+        public decimal TotalAmount { get; set; }
 
         public TransactionType PaymentType { get; set; }
 

@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\CommandRepository\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.28" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
       <PrivateAssets>all</PrivateAssets>
@@ -26,6 +22,10 @@
   <ItemGroup>
     <ProjectReference Include="..\PawnShop.Application\PawnShop.Application.csproj" />
     <ProjectReference Include="..\PawnShop.Domain\PawnShop.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Repositories\UnitOfWork\" />
   </ItemGroup>
 
 </Project>

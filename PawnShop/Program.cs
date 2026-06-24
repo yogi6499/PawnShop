@@ -59,6 +59,8 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICustomerQueryRepository, CustomerQueryRepository>();
 builder.Services.AddScoped<ICustomerCommandRepository, CustomerCommandRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<ILoanCommandRepository, LoanCommandRepository>();
+builder.Services.AddScoped<ILoanService, LoanService>();
 
 var app = builder.Build();
 
