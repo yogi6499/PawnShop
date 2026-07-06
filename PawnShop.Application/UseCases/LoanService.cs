@@ -12,10 +12,14 @@ namespace PawnShop.Application.UseCases
     public class LoanService : ILoanService
     {
         private readonly ILoanCommandRepository _loanCommandRepository;
+        private readonly ILoanQueryRepository _loanQueryRepository;
 
-        public LoanService(ILoanCommandRepository loanCommandRepository)
+        public LoanService(
+            ILoanCommandRepository loanCommandRepository,
+            ILoanQueryRepository loanQueryRepository)
         {
             _loanCommandRepository = loanCommandRepository;
+            _loanQueryRepository = loanQueryRepository;
         }
 
         public async Task<string> CreateLoanAsync(CreateLoanRequest request)
@@ -26,6 +30,21 @@ namespace PawnShop.Application.UseCases
         public async Task<bool> CreatePaymentAsync(CreatePaymentRequest request)
         {
             return await _loanCommandRepository.CreatePaymentAsync(request);
+        }
+
+        public async Task<IEnumerable<LoanDto>> GetLoansByTenantAsync(Guid tenantId)
+        {
+            return await _loanQueryRepository.GetLoansByTenantAsync(tenantId);
+        }
+
+        public async Task<LoanDetailsDto?> GetByIdAsync(Guid tenantId, int id)
+        {
+            return await _loanQueryRepository.GetByIdAsync(tenantId, id);
+        }
+
+        public async Task<IEnumerable<LoanDto>> GetLoansByCustomerAsync(Guid tenantId, int customerId)
+        {
+            return await _loanQueryRepository.GetLoansByCustomerAsync(tenantId, customerId);
         }
     }
 }

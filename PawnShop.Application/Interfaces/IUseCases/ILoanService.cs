@@ -11,5 +11,8 @@ namespace PawnShop.Application.Interfaces.IUseCases
     {
         Task<string> CreateLoanAsync(CreateLoanRequest request);
         Task<bool> CreatePaymentAsync(CreatePaymentRequest request);
+        Task<IEnumerable<LoanDto>> GetLoansByTenantAsync(Guid tenantId);
+        Task<LoanDetailsDto?> GetByIdAsync(Guid tenantId, int id);
+        Task<IEnumerable<LoanDto>> GetLoansByCustomerAsync(Guid tenantId, int customerId);
     }
 }

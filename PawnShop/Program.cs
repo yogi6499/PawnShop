@@ -61,8 +61,14 @@ builder.Services.AddScoped<ICustomerCommandRepository, CustomerCommandRepository
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<ILoanCommandRepository, LoanCommandRepository>();
 builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<ILoanQueryRepository, LoanQueryRepository>();
 builder.Services.AddScoped<IDashboardQueryRepository, DashboardQueryRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<ICapitalQueryRepository, CapitalQueryRepository>();
+builder.Services.AddScoped<ICapitalCommandRepository, CapitalCommandRepository>();
+builder.Services.AddScoped<ICapitalContributorQueryRepository, CapitalContributorQueryRepository>();
+builder.Services.AddScoped<ICapitalContributorCommandRepository, CapitalContributorCommandRepository>();
+builder.Services.AddScoped<ICapitalService, CapitalService>();
 
 var app = builder.Build();
 

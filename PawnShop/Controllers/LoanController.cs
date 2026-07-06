@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using PawnShop.Application.DTOs;
 using PawnShop.Application.Interfaces.IUseCases;
-using PawnShop.Domain.Entities;
-using PawnShop.Domain.Enums;
+using System;
+using System.Threading.Tasks;
 
 namespace PawnShop.API.Controllers
 {
@@ -13,14 +12,14 @@ namespace PawnShop.API.Controllers
     public class LoanController : ControllerBase
     {
         private readonly ILoanService _loanService;
+
         public LoanController(ILoanService loanService)
         {
             _loanService = loanService;
         }
 
         [HttpPost("CreateLoan")]
-        public async Task<IActionResult> CreateLoan(
-    CreateLoanRequest request)
+        public async Task<IActionResult> CreateLoan(CreateLoanRequest request)
         {
             try
             {
@@ -31,41 +30,50 @@ namespace PawnShop.API.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch(Exception ex)
-            {
-                throw; // Let the global exception handler deal with it
-            }
         }
 
         [HttpPost("CreatePayment")]
-        public async Task<IActionResult> CreatePayment(
-    CreatePaymentRequest request)
+        public async Task<IActionResult> CreatePayment(CreatePaymentRequest request)
         {
             try
             {
                 var totalAmount =
-                            request.PrincipalAmount +
-                            request.InterestAmount +
-                            request.PenaltyAmount +
-                            request.ServiceFee;
+                    request.PrincipalAmount +
+                    request.InterestAmount +
+                    request.PenaltyAmount +
+                    request.ServiceFee;
 
                 if (totalAmount <= 0)
-                {
                     return BadRequest("Invalid payment amount");
-                }
-                await _loanService.CreatePaymentAsync(request);
 
+                await _loanService.CreatePaymentAsync(request);
                 return Created();
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
-            {
-                throw; // Let the global exception handler deal with it
-            }
-            
+        }
+
+        [HttpGet("GetLoans/{tenantId}")]
+        public async Task<IActionResult> GetLoans(Guid tenantId)
+        {
+            var loans = await _loanService.GetLoansByTenantAsync(tenantId);
+            return Ok(loans);
+        }
+
+        [HttpGet("GetById/{tenantId}/{id}")]
+        public async Task<IActionResult> GetById(Guid tenantId, int id)
+        {
+            var loan = await _loanService.GetByIdAsync(tenantId, id);
+            return loan is null ? NotFound() : Ok(loan);
+        }
+
+        [HttpGet("GetLoanHistory/{tenantId}/{customerId}")]
+        public async Task<IActionResult> GetLoanHistory(Guid tenantId, int customerId)
+        {
+            var loans = await _loanService.GetLoansByCustomerAsync(tenantId, customerId);
+            return Ok(loans);
         }
     }
 }
