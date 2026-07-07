@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PawnShop.Application.DTOs;
 using PawnShop.Application.Interfaces.IUseCases;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 namespace PawnShop.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class CapitalController : ControllerBase
 {
