@@ -33,7 +33,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Enter 'Bearer {token}'"
+        Description = "Enter JWT token only (no 'Bearer ' prefix)"
     });
 
     // Require Bearer token for all operations (optional)
