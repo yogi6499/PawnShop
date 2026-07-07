@@ -7,6 +7,7 @@ using PawnShop.Application.Interfaces.IUseCases;
 using PawnShop.Infrastructure.DBContext;
 using PawnShop.Infrastructure.Repositories;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Text;
 using PawnShop.Infrastructure.Repositories.QueryRepository;
 using PawnShop.Infrastructure.Repositories.CommandRepository;
@@ -15,9 +16,17 @@ using PawnShop.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Allow configuration from environment variables (overrides appsettings)
+builder.Configuration.AddEnvironmentVariables();
+
 // Add services to the container.
+// Prefer connection string from environment variables when available
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                       ?? Environment.GetEnvironmentVariable("DefaultConnection")
+                       ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<PawnShopDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,6 +54,20 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+// Allow overriding JwtSettings values from environment variables. Environment vars to use:
+// JwtSettings__Key, JwtSettings__Issuer, JwtSettings__Audience, JwtSettings__ExpiryMinutes
+var envJwtKey = Environment.GetEnvironmentVariable("JwtSettings__Key") ?? Environment.GetEnvironmentVariable("JWT_KEY");
+if (!string.IsNullOrEmpty(envJwtKey)) builder.Configuration["JwtSettings:Key"] = envJwtKey;
+
+var envJwtIssuer = Environment.GetEnvironmentVariable("JwtSettings__Issuer") ?? Environment.GetEnvironmentVariable("JWT_ISSUER");
+if (!string.IsNullOrEmpty(envJwtIssuer)) builder.Configuration["JwtSettings:Issuer"] = envJwtIssuer;
+
+var envJwtAudience = Environment.GetEnvironmentVariable("JwtSettings__Audience") ?? Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+if (!string.IsNullOrEmpty(envJwtAudience)) builder.Configuration["JwtSettings:Audience"] = envJwtAudience;
+
+var envJwtExpiry = Environment.GetEnvironmentVariable("JwtSettings__ExpiryMinutes") ?? Environment.GetEnvironmentVariable("JWT_EXPIRYMINUTES");
+if (!string.IsNullOrEmpty(envJwtExpiry)) builder.Configuration["JwtSettings:ExpiryMinutes"] = envJwtExpiry;
 
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
