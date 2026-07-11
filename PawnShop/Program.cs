@@ -28,6 +28,17 @@ var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__De
 builder.Services.AddDbContext<PawnShopDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddControllers();
+// Temporary permissive CORS policy: allow any origin/method/header.
+// Replace with a restricted origin (deployed URL) when ready for production.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -127,6 +138,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Enable the temporary permissive CORS policy. Keep this before authentication/authorization.
+app.UseCors("AllowAll");
 
 app.UseAuthentication();
 
