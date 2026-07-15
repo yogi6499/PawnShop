@@ -114,6 +114,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserQueryRepository, UserQueryRepository>();
 builder.Services.AddScoped<IUserCommandRepository, UserCommandRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITenantQueryRepository, TenantQueryRepository>();
 builder.Services.AddScoped<ICustomerQueryRepository, CustomerQueryRepository>();
 builder.Services.AddScoped<ICustomerCommandRepository, CustomerCommandRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();

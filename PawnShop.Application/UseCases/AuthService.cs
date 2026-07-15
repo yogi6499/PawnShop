@@ -1,4 +1,5 @@
 using BCrypt.Net;
+using System.Collections.Generic;
 using PawnShop.Application.DTOs;
 using PawnShop.Application.Interfaces.IRepositories;
 using PawnShop.Application.Interfaces.IUseCases;
@@ -6,6 +7,7 @@ using PawnShop.Domain.Entities;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace PawnShop.Application.UseCases;
 
@@ -14,12 +16,14 @@ public class AuthService : IAuthService
     private readonly IUserQueryRepository _userQuery;
     private readonly IUserCommandRepository _userCommand;
     private readonly IJwtService _jwtService;
+    private readonly ITenantQueryRepository _tenantQuery;
 
-    public AuthService(IUserQueryRepository userQuery, IUserCommandRepository userCommand, IJwtService jwtService)
+    public AuthService(IUserQueryRepository userQuery, IUserCommandRepository userCommand, IJwtService jwtService, ITenantQueryRepository tenantQuery)
     {
         _userQuery = userQuery;
         _userCommand = userCommand;
         _jwtService = jwtService;
+        _tenantQuery = tenantQuery;
     }
 
     public async Task SignupAsync(SignupRequest request, CancellationToken cancellationToken = default)
@@ -39,6 +43,11 @@ public class AuthService : IAuthService
         };
 
         await _userCommand.AddAsync(user, cancellationToken);
+    }
+
+    public async Task<IEnumerable<TenantDto>> GetTenantsAsync(CancellationToken cancellationToken = default)
+    {
+        return await _tenantQuery.GetActiveTenantsAsync(cancellationToken);
     }
 
     public async Task<LoginResponse?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)

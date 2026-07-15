@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PawnShop.Application.DTOs;
+using System.Linq;
+using PawnShop.Application.Interfaces.IRepositories;
 using PawnShop.Application.Interfaces.IUseCases;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,10 +14,12 @@ namespace PawnShop.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly ITenantQueryRepository _tenantQuery;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, ITenantQueryRepository tenantQuery)
     {
         _authService = authService;
+        _tenantQuery = tenantQuery;
     }
 
     [HttpPost("signup")]
@@ -63,6 +67,21 @@ public class AuthController : ControllerBase
         catch (InvalidOperationException ex)
         {
             return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("tenants")]
+    public async Task<IActionResult> GetTenants()
+    {
+        try
+        {
+            var tenants = await _authService.GetTenantsAsync();
+            return Ok(tenants);
+        }
+        catch (Exception)
+        {
+            // Let middleware handle unexpected exceptions to keep behaviour consistent
+            throw;
         }
     }
 }
